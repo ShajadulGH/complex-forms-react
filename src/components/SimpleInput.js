@@ -1,42 +1,87 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 const SimpleInput = (props) => {
-  const gettingInput = useRef();
-  const [enteredInput, setInput] = useState("");
-  const [isValid, setIsValid] = useState(true);
+  const [enteredName, setInput] = useState("");
+  const [isTouchedName, setIsTouchedName] = useState(false);
+
+  const [enteredEmail, setEnteredEmail] = useState("");
+  const [isTouchedEmail, setIsTouchedEmail] = useState(false);
+
+  const isInputValid = enteredName !== "";
+  const isEmailValid = enteredEmail.includes("@");
+
+  const validityName = !isInputValid && isTouchedName;
+  const validityEmail = !isEmailValid && isTouchedEmail;
+
+  let formIsValid = false;
+  if (isInputValid === true && isEmailValid === true) {
+    formIsValid = true;
+  }
+  // onblur input field
+  const onLooseFocusName = () => {
+    setIsTouchedName(true);
+  };
+  const onLooseFocusEmail = () => {
+    setIsTouchedEmail(true);
+  };
+
+  // Handling inputs onchange
   const inputHandle = (event) => {
     setInput(event.target.value);
   };
+  const emailHandle = (event) => {
+    setEnteredEmail(event.target.value);
+  };
+  // Handle the submit
   const submitHandler = (event) => {
     event.preventDefault();
-    if (enteredInput.trim() === "") {
-      setIsValid(false);
+    setIsTouchedName(true);
+    setIsTouchedEmail(true);
+    if (!isInputValid || !isEmailValid) {
       return;
     }
-    setIsValid(true);
-    console.log(enteredInput);
-    const gotInput = gettingInput.current.value;
-    console.log(gotInput);
+    console.log(enteredName);
+    console.log(enteredEmail);
     setInput("");
+    setEnteredEmail("");
+    setIsTouchedName(false);
+    setIsTouchedEmail(false);
   };
-  const formClass = isValid ? "form-control" : "form-control invalid";
+  // Chnaging css on invalid inputs
+  const formClassName = validityName ? "form-control invalid" : "form-control";
+  const formClassEmail = validityEmail
+    ? "form-control invalid"
+    : "form-control";
   return (
     <form onSubmit={submitHandler}>
-      <div className={formClass}>
+      <div className={formClassName}>
         <label htmlFor="name">Your Name</label>
         <input
-          ref={gettingInput}
           onChange={inputHandle}
           type="text"
           id="name"
-          value={enteredInput}
+          value={enteredName}
+          onBlur={onLooseFocusName}
         />
       </div>
-      {!isValid && <p className="error-text">The input is invalid!</p>}
+      <div className={formClassEmail}>
+        <label htmlFor="email">Email</label>
+        <input
+          onChange={emailHandle}
+          type="text"
+          id="name"
+          value={enteredEmail}
+          onBlur={onLooseFocusEmail}
+        />
+      </div>
+      {validityName || validityEmail ? (
+        <p className="error-text">The input is invalid!</p>
+      ) : (
+        ""
+      )}
       <div className="form-actions">
-        <button>Submit</button>
+        <button disabled={!formIsValid}>Submit</button>
       </div>
     </form>
   );
 };
-
 export default SimpleInput;
