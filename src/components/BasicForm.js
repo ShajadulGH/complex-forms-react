@@ -62,6 +62,7 @@ const BasicForm = (props) => {
             id="name"
             value={nameInputValue}
           />
+          {nameNotValid && <p>First Name is not valid!!</p>}
         </div>
         <div className={classLName}>
           <label htmlFor="name">Last Name</label>
@@ -72,6 +73,7 @@ const BasicForm = (props) => {
             type="text"
             id="name"
           />
+          {lastNameNotValid && <p>Last Name is not valid!!</p>}
         </div>
       </div>
       <div className={classEmail}>
@@ -83,10 +85,8 @@ const BasicForm = (props) => {
           type="text"
           id="name"
         />
+        {EmailNotValid && <p>Email is not valid!!</p>}
       </div>
-      {(nameNotValid || lastNameNotValid || EmailNotValid) && (
-        <p>Input Field is not valid!!</p>
-      )}
       <div className="form-actions">
         <button disabled={!formIsValid}>Submit</button>
       </div>
