@@ -1,50 +1,34 @@
-import React, { useState } from "react";
+import React from "react";
+import useInput from "./Hooks/use-input";
 const SimpleInput = (props) => {
-  const [enteredName, setInput] = useState("");
-  const [isTouchedName, setIsTouchedName] = useState(false);
-
-  const [enteredEmail, setEnteredEmail] = useState("");
-  const [isTouchedEmail, setIsTouchedEmail] = useState(false);
-
-  const isInputValid = enteredName !== "";
-  const isEmailValid = enteredEmail.includes("@");
-
-  const validityName = !isInputValid && isTouchedName;
-  const validityEmail = !isEmailValid && isTouchedEmail;
-
+  const {
+    valueHandle: emailHandler,
+    isValid: isEmailValid,
+    onLooseFocus: onLooseFocusEmail,
+    value: inputEmail,
+    validity: validityEmail,
+    resetInput: resetEmail,
+  } = useInput((value) => value.includes("@"));
+  const {
+    valueHandle: nameHandler,
+    isValid: isNameValid,
+    onLooseFocus: onLooseFocusName,
+    value: inputName,
+    validity: validityName,
+    resetInput: resetName,
+  } = useInput((value) => value !== "");
   let formIsValid = false;
-  if (isInputValid === true && isEmailValid === true) {
+  if (isNameValid === true && isEmailValid === true) {
     formIsValid = true;
   }
-  // onblur input field
-  const onLooseFocusName = () => {
-    setIsTouchedName(true);
-  };
-  const onLooseFocusEmail = () => {
-    setIsTouchedEmail(true);
-  };
 
-  // Handling inputs onchange
-  const inputHandle = (event) => {
-    setInput(event.target.value);
-  };
-  const emailHandle = (event) => {
-    setEnteredEmail(event.target.value);
-  };
-  // Handle the submit
   const submitHandler = (event) => {
     event.preventDefault();
-    setIsTouchedName(true);
-    setIsTouchedEmail(true);
-    if (!isInputValid || !isEmailValid) {
+    if (!isNameValid || !isEmailValid) {
       return;
     }
-    console.log(enteredName);
-    console.log(enteredEmail);
-    setInput("");
-    setEnteredEmail("");
-    setIsTouchedName(false);
-    setIsTouchedEmail(false);
+    resetName();
+    resetEmail();
   };
   // Chnaging css on invalid inputs
   const formClassName = validityName ? "form-control invalid" : "form-control";
@@ -56,20 +40,20 @@ const SimpleInput = (props) => {
       <div className={formClassName}>
         <label htmlFor="name">Your Name</label>
         <input
-          onChange={inputHandle}
+          onChange={nameHandler}
           type="text"
           id="name"
-          value={enteredName}
+          value={inputName}
           onBlur={onLooseFocusName}
         />
       </div>
       <div className={formClassEmail}>
         <label htmlFor="email">Email</label>
         <input
-          onChange={emailHandle}
+          onChange={emailHandler}
           type="text"
           id="name"
-          value={enteredEmail}
+          value={inputEmail}
           onBlur={onLooseFocusEmail}
         />
       </div>
