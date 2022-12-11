@@ -35,9 +35,10 @@ const BasicForm = (props) => {
   // After submit form
   const submitHandler = (event) => {
     event.preventDefault();
-    if (nameIsValidValue === false && lastNameIsValidValue === false) {
+    if (!formIsValid) {
       return;
     }
+    console.log("Summitted!!!");
     console.log(nameInputValue);
     console.log(lastNameInputValue);
     console.log(EmailInputValue);
@@ -83,7 +84,9 @@ const BasicForm = (props) => {
           id="name"
         />
       </div>
-      {(nameNotValid || lastNameNotValid) && <p>Input Field is not valid!!</p>}
+      {(nameNotValid || lastNameNotValid || EmailNotValid) && (
+        <p>Input Field is not valid!!</p>
+      )}
       <div className="form-actions">
         <button disabled={!formIsValid}>Submit</button>
       </div>
